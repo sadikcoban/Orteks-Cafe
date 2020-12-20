@@ -17,7 +17,7 @@ class _WaiterMainPageState extends State<WaiterMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "ANASAYFA",
+       appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "Dashboard",
           Color(0xff329D9C), RefreshButton()),
           drawer: NavigationBarWaiter(),
           body: SiparisOzeti(),

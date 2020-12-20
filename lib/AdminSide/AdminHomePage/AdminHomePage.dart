@@ -1,7 +1,8 @@
-
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/App-Navigation-Loading/NavigationBarAdmin.dart';
+import 'package:MobilProject/classes/api_person.dart';
+import 'package:MobilProject/services/service_reqs.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -13,7 +14,7 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  String currentWaiter = null;
+  String currentWaiter = "";
   List<String> WaiterList = ["Salih Mert", "Sadık", "Ziya", "Mehmet"];
   bool birG = true;
   bool birH = false;
@@ -23,48 +24,66 @@ class _AdminHomePageState extends State<AdminHomePage> {
   int faturaID;
   String GHAY_Yazi = "Daily Profit";
   double GHAY_Para = 196.14;
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ApplicationBar(
-          Colors.white, Color(0xff329D9C), "Dashboard", Color(0xff329D9C),SizedBox()),
+      appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "Dashboard",
+          Color(0xff329D9C), SizedBox()),
       drawer: NaavigationBarAdmin(),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: AnimationTranstion.uzunlukFonksiyonu(25, context),
-              ),
-              KazancBilgisi(GHAY_Para),
-              SizedBox(
-                height: AnimationTranstion.uzunlukFonksiyonu(15, context),
-              ),
-              HaftalikAylikYillik(GHAY_Yazi),
-              SizedBox(
-                height: AnimationTranstion.uzunlukFonksiyonu(25, context),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Gunluk(187.45),
-                  Haftalik(96.57),
-                  Aylik(1084.87),
-                  Yillik(42.55)
+      body: FutureBuilder(
+          future: ServiceReqs().getCrew(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return ListView(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height:
+                            AnimationTranstion.uzunlukFonksiyonu(25, context),
+                      ),
+                      KazancBilgisi(GHAY_Para),
+                      SizedBox(
+                        height:
+                            AnimationTranstion.uzunlukFonksiyonu(15, context),
+                      ),
+                      HaftalikAylikYillik(GHAY_Yazi),
+                      SizedBox(
+                        height:
+                            AnimationTranstion.uzunlukFonksiyonu(25, context),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Gunluk(187.45),
+                          Haftalik(96.57),
+                          Aylik(1084.87),
+                          Yillik(42.55)
+                        ],
+                      ),
+                      SizedBox(
+                        height:
+                            AnimationTranstion.uzunlukFonksiyonu(50, context),
+                      ),
+                      GarsonlarinDurumu(snapshot.data),
+                      SizedBox(
+                        height:
+                            AnimationTranstion.uzunlukFonksiyonu(50, context),
+                      ),
+                      SiparisOzeti(),
+                    ],
+                  )
                 ],
-              ),
-              SizedBox(
-                height: AnimationTranstion.uzunlukFonksiyonu(50, context),
-              ),
-              GarsonlarinDurumu(),
-              SizedBox(
-                height: AnimationTranstion.uzunlukFonksiyonu(50, context),
-              ),
-              SiparisOzeti(),
-            ],
-          )
-        ],
-      ),
+              );
+            }
+          }),
     );
   }
 
@@ -194,7 +213,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  GarsonlarinDurumu() {
+  GarsonlarinDurumu(List<ApiPerson> list) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ExpansionTileCard(
@@ -203,7 +222,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         initialElevation: 15,
         shadowColor: Colors.black,
         title: Text(
-          "Staff Members",
+          "Crew",
           style: GoogleFonts.montserrat(
               color: Color(0xff329D9C), fontWeight: FontWeight.bold),
         ),
@@ -212,64 +231,32 @@ class _AdminHomePageState extends State<AdminHomePage> {
         children: [
           Column(
             children: [
-              ListTile(
-                leading: AnimationTranstion.Avatar(
-                    "waiter", Colors.white54, BoxFit.contain, 30, 30),
-                title: Text(
-                  "Salih Mert ATALAY",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.white70, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Şu An Latte Hazırlıyor.",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.red, fontWeight: FontWeight.w400),
-                ),
-              ),
-              ListTile(
-                leading: AnimationTranstion.Avatar(
-                    "waiter", Colors.white54, BoxFit.contain, 30, 30),
-                title: Text(
-                  "Sadık ÇOBAN",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.white70, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Görev Verildi",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.blue, fontWeight: FontWeight.w400),
-                ),
-              ),
-              ListTile(
-                leading: AnimationTranstion.Avatar(
-                    "waiter", Colors.white54, BoxFit.contain, 30, 30),
-                title: Text(
-                  "Merhmet BALIK",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.white70, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Boşta",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.green, fontWeight: FontWeight.w400),
-                ),
-              ),
-              ListTile(
-                leading: AnimationTranstion.Avatar(
-                    "waiter", Colors.white54, BoxFit.contain, 30, 30),
-                title: Text(
-                  "Ziya DENİZ",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.white70, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Şu An Mocha Hazırlıyor.",
-                  style: GoogleFonts.montserrat(
-                      color: Colors.red, fontWeight: FontWeight.w400),
+              Container(
+                height: 400,
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) => ListTile(
+                    leading: AnimationTranstion.Avatar(
+                        "waiter", Colors.white54, BoxFit.contain, 30, 30),
+                    title: Text(
+                      list[index].name,
+                      style: GoogleFonts.montserrat(
+                          color: Colors.white70, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      list[index].gender == "female"
+                          ? "Working for a customer"
+                          : "Available now",
+
+                      style: GoogleFonts.montserrat(
+                          color: list[index].gender == "female" ? Colors.red : Colors.blue, fontWeight: FontWeight.w400),
+                          
+                    ),
+                  ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -289,7 +276,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               color: Color(0xff329D9C), fontWeight: FontWeight.bold),
         ),
         leading: AnimationTranstion.Avatar(
-            "OrderFood",Color(0xff329D9C), BoxFit.contain, 50, 50),
+            "OrderFood", Color(0xff329D9C), BoxFit.contain, 50, 50),
         children: [
           Column(
             children: [
@@ -307,7 +294,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
       ),
     );
   }
-OkeyButton() {
+
+  OkeyButton() {
     return new Container(
       height: 30.00,
       width: 80.00,
@@ -328,6 +316,7 @@ OkeyButton() {
       ),
     );
   }
+
   SiparisItem(BuildContext context, int index) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -364,41 +353,49 @@ OkeyButton() {
               ),
             ],
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [ WaiterDropDown(),OkeyButton(),],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              WaiterDropDown(),
+              OkeyButton(),
+            ],
+          ),
         ],
       ),
     );
   }
 
   WaiterDropDown() {
-      return Container(
-        child: DropdownButton(
-          value: currentWaiter,
-          hint: new Text("Choose a Staff",style: TextStyle(color: Colors.white70),),
-          icon: Icon(Icons.arrow_downward),
-          underline: Container(
-            height: 2,
-            color:Color(0xff0d836f),
-          ),
-          onChanged: (newValue) {
-            setState(() {
-              currentWaiter = newValue;
-            });
-          },
-          items: WaiterList.map((String waiter) {
-            return new DropdownMenuItem(
-              value: waiter,
-              child: Center(
-                child: new Text(
-                  waiter,
-                  style: new TextStyle(color: Colors.grey),
-                ),
-              ),
-            );
-          }).toList(),
+    return Container(
+      child: DropdownButton(
+        value: currentWaiter,
+        hint: new Text(
+          "Choose a Staff",
+          style: TextStyle(color: Colors.white70),
         ),
-      );
+        icon: Icon(Icons.arrow_downward),
+        underline: Container(
+          height: 2,
+          color: Color(0xff0d836f),
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            currentWaiter = newValue;
+          });
+        },
+        items: WaiterList.map((String waiter) {
+          return new DropdownMenuItem(
+            value: waiter,
+            child: Center(
+              child: new Text(
+                waiter,
+                style: new TextStyle(color: Colors.grey),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   GenelSiparisler(BuildContext context, int index) {

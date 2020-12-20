@@ -23,7 +23,7 @@ class _OrdersWaiterState extends State<OrdersWaiter> {
       appBar: ApplicationBar(
           Colors.white,
           Color(0xff329D9C),
-          currentIndex == 0 ? "SİPARİŞLER" : "MASALAR",
+          currentIndex == 0 ? "Waiting Orders" : "Tables",
           Color(0xff329D9C),
           RefreshButton()),
       body: tabs[currentIndex],

@@ -1,7 +1,11 @@
+import 'dart:math';
 
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/App-Navigation-Loading/NavigationBarAdmin.dart';
+import 'package:MobilProject/classes/api_person.dart';
+import 'package:MobilProject/classes/api_product.dart';
+import 'package:MobilProject/services/service_reqs.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +26,7 @@ class Statistics extends StatelessWidget {
     'Salih': 6,
     'Arif': 7,
   };
-  final Map<String, double> BestPersonelsY ={
+  final Map<String, double> BestPersonelsY = {
     'Sadik': 7,
     'Arif': 8,
     'Ziya': 16,
@@ -50,31 +54,32 @@ class Statistics extends StatelessWidget {
     'Americano': 5,
     'Sıcak Çikolata': 7,
   };
-  final Map<String, double> LowestSellingProductsT ={
+  final Map<String, double> LowestSellingProductsT = {
     'Cold Brew': 4,
     'Muzlu Frappe': 8,
     'Limonata': 5,
     'Süt': 5,
     'Melengiç Kahvesi': 7,
   };
-  final Map<String, double> LowestSellingProductsM ={
+  final Map<String, double> LowestSellingProductsM = {
     'Türk Kahvesi': 1,
     'Latte': 5,
     'Efe Kahvesi': 6,
     'Americano': 5,
     'Limonata': 9,
   };
-  final Map<String, double> LowestSellingProductsY ={
+  final Map<String, double> LowestSellingProductsY = {
     'Türk Kahvesi': 12,
     'Limonata': 7,
     'sahlep': 14,
     'Efe Kahvesi': 10,
     'Muzlu Frapp': 9,
   };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "İSTATİSTİKLER",
+      appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "Statistics",
           Color(0xff329D9C), SizedBox()),
       drawer: NaavigationBarAdmin(),
       body: SafeArea(
@@ -83,12 +88,129 @@ class Statistics extends StatelessWidget {
         children: [
           Column(
             children: [
-              CardItem(BestPersonelsT, BestPersonelsM, BestPersonelsY,
-                  "En Hızlı Çalışan Garsonlar", context),
-              CardItem(HighestSellingProductsT, HighestSellingProductsM,
-                  HighestSellingProductsY, "En Çok Satan Ürünler", context),
-              CardItem(LowestSellingProductsT, LowestSellingProductsM,
-                  LowestSellingProductsY, "En Az Satan Ürünler", context),
+              FutureBuilder(
+                future: ServiceReqs().getCrew(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<ApiPerson> personlist = snapshot.data;
+
+                    var myList = personlist.take(5);
+                    var dailyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => double.parse(e.productNum));
+                    var monthlyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => double.parse(e.customerNum));
+                    var annulMap = Map.fromIterable(
+                      myList,
+                      key: (e) => e.name.toString(),
+                      value: (e) =>
+                          ((int.parse(e.productNum) + int.parse(e.customerNum))
+                              .toDouble()),
+                    );
+                    return CardItem(
+                      dailyMap,
+                      monthlyMap,
+                      annulMap,
+                      "The Most Working Staff",
+                      context,
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        width: 25,
+                        height: 25,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              FutureBuilder(
+                future: ServiceReqs().getProductsOfCategory("Cocktail"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<ApiProduct> productlist = snapshot.data;
+
+                    var myList = productlist.take(5);
+                    var dailyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => (double.parse(e.id) % 20).toDouble());
+                    myList = productlist.getRange(5, 10);
+                    var monthlyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => (double.parse(e.id) % 30).toDouble());
+                    myList = productlist.getRange(10, 15);
+                    var annulMap = Map.fromIterable(
+                      myList,
+                      key: (e) => e.name.toString(),
+                      value: (e) => (double.parse(e.id) % 40).toDouble(),
+                    );
+                    return CardItem(
+                      dailyMap,
+                      monthlyMap,
+                      annulMap,
+                      "Most Sold Products",
+                      context,
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              FutureBuilder(
+                future: ServiceReqs().getProductsOfCategory("Ordinary_Drink"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<ApiProduct> productlist = snapshot.data;
+
+                    var myList = productlist.take(5);
+                    var dailyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => (double.parse(e.id) % 20).toDouble());
+                    myList = productlist.getRange(5, 10);
+                    var monthlyMap = Map.fromIterable(myList,
+                        key: (e) => e.name.toString(),
+                        value: (e) => (double.parse(e.id) % 30).toDouble());
+                    myList = productlist.getRange(10, 15);
+                    var annulMap = Map.fromIterable(
+                      myList,
+                      key: (e) => e.name.toString(),
+                      value: (e) => (double.parse(e.id) % 40).toDouble(),
+                    );
+                    return CardItem(
+                      dailyMap,
+                      monthlyMap,
+                      annulMap,
+                      "Less Sold Products",
+                      context,
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           )
         ],
@@ -109,18 +231,18 @@ class Statistics extends StatelessWidget {
               color: Color(0xff329D9C),
             )),
         children: [
-          GeneralHeader("GÜNLÜK"),
-          SizedBox(height:15),
+          GeneralHeader("Daily"),
+          SizedBox(height: 15),
           PieChartItem(Today, context),
-           SizedBox(height:15),
-          GeneralHeader("AYLIK"),
-           SizedBox(height:15),
+          SizedBox(height: 15),
+          GeneralHeader("Monthly"),
+          SizedBox(height: 15),
           PieChartItem(Month, context),
-           SizedBox(height:15),
-          GeneralHeader("YILLIK"),
-           SizedBox(height:15),
+          SizedBox(height: 15),
+          GeneralHeader("Anually"),
+          SizedBox(height: 15),
           PieChartItem(Year, context),
-           SizedBox(height:15),
+          SizedBox(height: 15),
         ],
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:MobilProject/App-Navigation-Loading/AwesomeD%C4%B0alogClass.dart';
+import 'package:MobilProject/MainPage/MainPage.dart';
+import 'package:MobilProject/WaiterSide/WaiterMainPage.dart';
 import 'package:flutter/material.dart';
 import 'AdminSide/AdminHomePage/AdminHomePage.dart';
 import 'App-Navigation-Loading/AnimationTransition.dart';
@@ -32,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomerMainPage()
+      body: MainPage()
                   
     );
   }

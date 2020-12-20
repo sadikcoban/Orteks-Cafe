@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:MobilProject/classes/api_category.dart';
+import 'package:MobilProject/classes/api_customer.dart';
 import 'package:MobilProject/classes/api_product.dart';
+import 'package:MobilProject/classes/api_person.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -48,6 +50,26 @@ class ServiceReqs {
       }
     } catch (e) {}
   }
+
+  Future<List<ApiPerson>> getCrew() async {
+     {
+      final response = await Dio().get("https://swapi.dev/api/people");
+      if (response.statusCode == 200) {
+        return compute(parseCrews, response.data);
+      }
+    } 
+  }
+
+  Future<List<ApiPerson>> getCustomers() async {
+     try{
+      final response = await Dio().get("https://swapi.dev/api/people/?page=2");
+      if (response.statusCode == 200) {
+        return compute(parseCrews, response.data);
+      }
+    } catch(e){}
+  }
+
+
 }
 
 Future<List<ApiCategory>> parseCategories(responseData) async {
@@ -83,5 +105,18 @@ List<ApiProduct> parseProducts(responseData) {
 List<ApiProduct> parseOneProduct(responseData) {
   return (responseData["drinks"] as List)
       .map((prod) => ApiProduct.fromJsonLong(prod))
+      .toList();
+}
+
+List<ApiPerson> parseCrews(responseData) {
+  return (responseData["results"] as List)
+      .map((e) => ApiPerson.fromJson(e))
+      .toList();
+}
+
+
+List<ApiCustomer> parseCustomers(responseData) {
+  return (responseData as List)
+      .map((e) => ApiCustomer.fromJson(e))
       .toList();
 }

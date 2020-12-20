@@ -3,30 +3,31 @@ import 'package:MobilProject/AdminSide/Products/Products.dart';
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/App-Navigation-Loading/NavigationBarAdmin.dart';
+import 'package:MobilProject/services/service_reqs.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        //stream: FirebaseFirestore.instance.collection("categories").snapshots(),
+    return FutureBuilder(
+        future: ServiceReqs().getCategories(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Scaffold(
               appBar: ApplicationBar(Colors.white, Color(0xff329D9C),
-                  "KATEGORİLER", Color(0xff329D9C), AddNewCategories()),
+                  "Categories", Color(0xff329D9C), AddNewCategories()),
               drawer: NaavigationBarAdmin(),
               body: Center(
                 child: CircularProgressIndicator(),
               ),
             );
           } else {
-            final categories = snapshot.data.documents;
+            final categories = snapshot.data;
             if (categories.length == 0) {
               return Scaffold(
                 appBar: ApplicationBar(Colors.white, Color(0xff329D9C),
-                    "KATEGORİLER", Color(0xff329D9C), AddNewCategories()),
+                    "Categories", Color(0xff329D9C), AddNewCategories()),
                 drawer: NaavigationBarAdmin(),
                 body: Center(
                   child: Text("No category created yet"),
@@ -35,7 +36,7 @@ class Categories extends StatelessWidget {
             } else {
               return Scaffold(
                 appBar: ApplicationBar(Colors.white, Color(0xff329D9C),
-                    "KATEGORİLER", Color(0xff329D9C), AddNewCategories()),
+                    "Categories", Color(0xff329D9C), AddNewCategories()),
                 drawer: NaavigationBarAdmin(),
                 body: Column(
                   children: [
@@ -46,9 +47,9 @@ class Categories extends StatelessWidget {
                           itemBuilder: (context, index) => CategoriCard(
                             context,
                             index,
-                            categories[index].documentID,
-                            categories[index]["name"],
-                            categories[index]["image_url"],
+                          
+                            categories[index].name,
+                            categories[index].image_url,
                           ),
                         ),
                       ),
@@ -61,14 +62,13 @@ class Categories extends StatelessWidget {
         });
   }
 
-  CategoriCard(BuildContext context, int index, String id, String name,
-      String imageUrl) {
-    print(id);
+  CategoriCard(BuildContext context, int index,  String name,
+      String imageUrl) {  
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: GestureDetector(
         onTap: () => AnimationTranstion.AnimationPushWidget_LeftToRight(
-            Products(id, name), context),
+            Products(name), context),
         child: Card(
           elevation: 15,
           shadowColor: Colors.black,

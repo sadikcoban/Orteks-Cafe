@@ -1,15 +1,12 @@
 
 import 'package:MobilProject/AdminSide/AdminHomePage/AdminHomePage.dart';
 import 'package:MobilProject/AdminSide/AdminOrders/Orders.dart';
-import 'package:MobilProject/AdminSide/PrepareOrders/PrepareOrders.dart';
 import 'package:MobilProject/AdminSide/Products/Categories.dart';
 import 'package:MobilProject/AdminSide/Staff/Staff.dart';
 import 'package:MobilProject/AdminSide/Statistics/Statistics.dart';
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
-import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/MainPage/MainPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NaavigationBarAdmin extends StatelessWidget {
@@ -73,19 +70,6 @@ class NaavigationBarAdmin extends StatelessWidget {
                 color: Color(0xff329D9C),
               ),
               onTap: () =>AnimationTranstion.AnimationPushWidget_DownToUp(Orders(), context),
-            ),
-             ListTile(
-              title: Text(
-                "Hazırlanacaklar",
-                style: GoogleFonts.montserrat(
-                  color: Color(0xff329D9C),
-                ),
-              ),
-              leading: Icon(
-                Icons.food_bank_outlined,
-                color: Color(0xff329D9C),
-              ),
-              onTap: () =>AnimationTranstion.AnimationPushWidget_DownToUp(PrepareOrders(), context),
             ),
             ListTile(
               title: Text(

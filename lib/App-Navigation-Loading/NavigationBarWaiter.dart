@@ -1,4 +1,3 @@
-
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/MainPage/MainPage.dart';
@@ -13,7 +12,7 @@ import 'AnimationTransition.dart';
 class NavigationBarWaiter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   return Container(
+    return Container(
       width: 200,
       child: Drawer(
         child: ListView(
@@ -30,7 +29,7 @@ class NavigationBarWaiter extends StatelessWidget {
             ),
             ListTile(
               title: Text(
-                "AnaSayfa",//
+                "Dashboard", //
                 style: GoogleFonts.montserrat(
                   color: Color(0xff329D9C),
                 ),
@@ -46,7 +45,7 @@ class NavigationBarWaiter extends StatelessWidget {
             ),
             ListTile(
               title: Text(
-                "Siparişler",
+                "To Do",
                 style: GoogleFonts.montserrat(
                   color: Color(0xff329D9C),
                 ),
@@ -55,24 +54,12 @@ class NavigationBarWaiter extends StatelessWidget {
                 Icons.add_shopping_cart,
                 color: Color(0xff329D9C),
               ),
-              onTap: () =>AnimationTranstion.AnimationPushWidget_DownToUp(OrdersWaiter(), context),
+              onTap: () => AnimationTranstion.AnimationPushWidget_DownToUp(
+                  OrdersWaiter(), context),
             ),
-             ListTile(
+            ListTile(
               title: Text(
-                "Hazırlanacaklar",
-                style: GoogleFonts.montserrat(
-                  color: Color(0xff329D9C),
-                ),
-              ),
-              leading: Icon(
-                Icons.food_bank_outlined,
-                color: Color(0xff329D9C),
-              ),
-              onTap: () =>AnimationTranstion.AnimationPushWidget_DownToUp(PrepareOrdersWaiter(), context),
-            ),
-             ListTile(
-              title: Text(
-                "Çıkış Yap",
+                "Sign Out",
                 style: GoogleFonts.montserrat(
                   color: Colors.red,
                 ),
@@ -82,7 +69,7 @@ class NavigationBarWaiter extends StatelessWidget {
                 color: Colors.red,
               ),
               onTap: () => AnimationTranstion.AnimationPushWidget_LeftToRight(
-                    MainPage(), context),
+                  MainPage(), context),
             ),
           ],
         ),

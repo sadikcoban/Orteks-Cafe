@@ -13,9 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProduct extends StatefulWidget {
-  final String categoryID;
+ 
   final String categoryName;
-  AddProduct(this.categoryID, this.categoryName);
+  AddProduct(this.categoryName);
   @override
   _AddProductState createState() => _AddProductState();
 }

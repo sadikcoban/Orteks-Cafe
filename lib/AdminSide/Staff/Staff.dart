@@ -1,7 +1,7 @@
-
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/App-Navigation-Loading/NavigationBarAdmin.dart';
+import 'package:MobilProject/services/service_reqs.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,23 +11,41 @@ class Staff extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NaavigationBarAdmin(),
-      appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "PERSONELLER",
+      appBar: ApplicationBar(Colors.white, Color(0xff329D9C), "Staff",
           Color(0xff329D9C), RefreshButton()),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Column(
-            children: [
-              CardItem(Colors.blue, "Görev Verildi", "Mehmet BALIK"),
-               CardItem(Colors.red, "Türk Kahvesi Hazırlıyor", "Salih Mert ATALAY"),
-                CardItem(Colors.green, "Boşta", "Sadık ÇOBAN"),
-                 CardItem(Colors.red, "Çay Hazırlıyor", "Ziya DENİZ"),
-            ],
-          )
-        ],
-      ),
+      body: FutureBuilder(
+          future: ServiceReqs().getCrew(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+
+              return Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) => CardItem(
+                        snapshot.data[index].gender == "female" ? Colors.red : Colors.blue,
+                        snapshot.data[index].gender == "female"
+                            ? "Working for a customer"
+                            : "Available now",
+                        snapshot.data[index].name,
+                        int.parse(snapshot.data[index].customerNum),
+                        int.parse(snapshot.data[index].productNum),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          }),
     );
   }
+
   RefreshButton() {
     return IconButton(
         icon: Icon(
@@ -36,7 +54,8 @@ class Staff extends StatelessWidget {
         ),
         onPressed: null);
   }
-  CardItem(Color color, String Mission, String StaffName) {
+
+  CardItem(Color color, String Mission, String StaffName, int customerNum, int productNum) {
     return ExpansionTileCard(
       leading: AnimationTranstion.Avatar(
           "waiter", Colors.black, BoxFit.contain, 30, 30),
@@ -55,8 +74,16 @@ class Staff extends StatelessWidget {
               padding: const EdgeInsets.all(7.0),
               child: Card(
                 child: ListTile(
-                  title: Text("Günlük Toplam Müşteri",style: GoogleFonts.montserrat(color: Colors.black87,),),
-                  trailing: Text("18",style: GoogleFonts.montserrat(color: Colors.green[900]),),
+                  title: Text(
+                    "Daily serviced customer number",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  trailing: Text(
+                    customerNum.toString(),
+                    style: GoogleFonts.montserrat(color: Colors.green[900]),
+                  ),
                 ),
               ),
             ),
@@ -66,8 +93,16 @@ class Staff extends StatelessWidget {
                 elevation: 5,
                 shadowColor: Colors.black,
                 child: ListTile(
-                  title: Text("Günlük Verilen Ürün",style: GoogleFonts.montserrat(color: Colors.black87,),),
-                  trailing: Text("96",style: GoogleFonts.montserrat(color: Colors.green[900]),),
+                  title: Text(
+                    "Daily prepared product number",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  trailing: Text(
+                    productNum.toString(),
+                    style: GoogleFonts.montserrat(color: Colors.green[900]),
+                  ),
                 ),
               ),
             )

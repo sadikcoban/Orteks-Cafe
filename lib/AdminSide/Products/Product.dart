@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:MobilProject/App-Navigation-Loading/AnimationTransition.dart';
 import 'package:MobilProject/App-Navigation-Loading/ApplicationBar.dart';
 import 'package:MobilProject/App-Navigation-Loading/NavigationBarAdmin.dart';
+import 'package:MobilProject/services/service_reqs.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
@@ -26,6 +28,7 @@ class _ProductState extends State<Product> {
   String currentItem = null;
   final picker = ImagePicker();
   TextEditingController NameController = new TextEditingController();
+  TextEditingController explainController = new TextEditingController();
   TextEditingController PriceController = new TextEditingController();
   File BuyukResim = null;
   int resimIndexi;
@@ -36,11 +39,8 @@ class _ProductState extends State<Product> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      /* stream: FirebaseFirestore.instance
-          .collection("products")
-          .doc(widget.productId)
-          .snapshots(), */
+    return FutureBuilder(
+      future: ServiceReqs().getOneProduct(widget.productId),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Scaffold(
@@ -72,6 +72,10 @@ class _ProductState extends State<Product> {
               ),
             );
           } else {
+            NameController.text = snapshot.data[0].name;
+            explainController.text = snapshot.data[0].desc;
+            PriceController.text =
+                (new Random().nextDouble() * 40).toStringAsFixed(2);
             return Scaffold(
               appBar: ApplicationBar(
                 Colors.white,
@@ -118,6 +122,13 @@ class _ProductState extends State<Product> {
                           NameController,
                           40,
                           "Product Name",
+                          Icon(Icons.border_color),
+                          TextInputType.emailAddress,
+                        ),
+                        TextFieldContainer(
+                          explainController,
+                          40,
+                          "Explanation",
                           Icon(Icons.border_color),
                           TextInputType.emailAddress,
                         ),
