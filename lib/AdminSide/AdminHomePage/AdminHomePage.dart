@@ -77,7 +77,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         height:
                             AnimationTranstion.uzunlukFonksiyonu(50, context),
                       ),
-                      SiparisOzeti(),
+                     // SiparisOzeti(),
                     ],
                   )
                 ],
